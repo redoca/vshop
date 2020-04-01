@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.shop.mapper.VCategoryMapper">
+    
+    <resultMap type="VCategory" id="VCategoryResult">
+        <result property="categoryId"    column="category_id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="name"    column="name"    />
+        <result property="status"    column="status"    />
+        <result property="orderNum"    column="order_num"    />
+        <result property="icon"    column="icon"    />
+        <result property="listStyle"    column="list_style"    />
+        <result property="mark"    column="mark"    />
+    </resultMap>
+
+    <sql id="selectVCategoryVo">
+        select category_id, parent_id, name, status, order_num, icon, list_style, mark from v_category
+    </sql>
+
+    <select id="selectVCategoryList" parameterType="VCategory" resultMap="VCategoryResult">
+        <include refid="selectVCategoryVo"/>
+        <where>  
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="orderNum != null "> and order_num = #{orderNum}</if>
+            <if test="icon != null  and icon != ''"> and icon = #{icon}</if>
+            <if test="listStyle != null "> and list_style = #{listStyle}</if>
+            <if test="mark != null  and mark != ''"> and mark = #{mark}</if>
+        </where>
+    </select>
+    
+    <select id="selectVCategoryById" parameterType="Long" resultMap="VCategoryResult">
+        <include refid="selectVCategoryVo"/>
+        where category_id = #{categoryId}
+    </select>
+        
+    <insert id="insertVCategory" parameterType="VCategory" useGeneratedKeys="true" keyProperty="categoryId">
+        insert into v_category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentId != null ">parent_id,</if>
+            <if test="name != null  and name != ''">name,</if>
+            <if test="status != null ">status,</if>
+            <if test="orderNum != null ">order_num,</if>
+            <if test="icon != null  and icon != ''">icon,</if>
+            <if test="listStyle != null ">list_style,</if>
+            <if test="mark != null  and mark != ''">mark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentId != null ">#{parentId},</if>
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="status != null ">#{status},</if>
+            <if test="orderNum != null ">#{orderNum},</if>
+            <if test="icon != null  and icon != ''">#{icon},</if>
+            <if test="listStyle != null ">#{listStyle},</if>
+            <if test="mark != null  and mark != ''">#{mark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateVCategory" parameterType="VCategory">
+        update v_category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null ">parent_id = #{parentId},</if>
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="status != null ">status = #{status},</if>
+            <if test="orderNum != null ">order_num = #{orderNum},</if>
+            <if test="icon != null  and icon != ''">icon = #{icon},</if>
+            <if test="listStyle != null ">list_style = #{listStyle},</if>
+            <if test="mark != null  and mark != ''">mark = #{mark},</if>
+        </trim>
+        where category_id = #{categoryId}
+    </update>
+
+    <delete id="deleteVCategoryById" parameterType="Long">
+        delete from v_category where category_id = #{categoryId}
+    </delete>
+
+    <delete id="deleteVCategoryByIds" parameterType="String">
+        delete from v_category where category_id in 
+        <foreach item="categoryId" collection="array" open="(" separator="," close=")">
+            #{categoryId}
+        </foreach>
+    </delete>
+    
+</mapper>
