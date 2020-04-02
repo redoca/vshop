@@ -8,7 +8,8 @@
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
-          maxlength="100" show-word-limit
+          maxlength="100"
+          show-word-limit
         />
       </el-form-item>
       <el-form-item label="状态" prop="status">
@@ -72,7 +73,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="品牌ID" align="center" prop="brandId" /> -->
       <el-table-column label="品牌名称" align="center" prop="name" />
-      <el-table-column label="品牌LOGO" align="center" prop="logo" >
+      <el-table-column label="品牌LOGO" align="center" prop="logo">
         <template slot-scope="scope">
           <el-image style="width: 50px; height: 50px" :src="baseApi + scope.row.logo" fit="contain">
             <div slot="error" class="image-slot">
@@ -102,7 +103,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -115,7 +116,7 @@
     <el-dialog :title="title" :visible.sync="open" width="500px">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="品牌名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入品牌名称" maxlength="100" show-word-limit/>
+          <el-input v-model="form.name" placeholder="请输入品牌名称" maxlength="100" show-word-limit />
         </el-form-item>
         <el-form-item label="品牌LOGO" prop="logo">
           <!-- <el-input v-model="form.icon" placeholder="请输入图标地址" /> -->
@@ -132,7 +133,13 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="描述" prop="description">
-          <el-input v-model="form.description" type="textarea" placeholder="请输入内容" maxlength="4000" show-word-limit/>
+          <el-input
+            v-model="form.description"
+            type="textarea"
+            placeholder="请输入内容"
+            maxlength="4000"
+            show-word-limit
+          />
         </el-form-item>
         <el-form-item label="状态">
           <el-radio-group v-model="form.status">
@@ -153,7 +160,14 @@
 </template>
 
 <script>
-import { listBrand, getBrand, delBrand, addBrand, updateBrand, exportBrand } from "@/api/shop/brand";
+import {
+  listBrand,
+  getBrand,
+  delBrand,
+  addBrand,
+  updateBrand,
+  exportBrand
+} from "@/api/shop/brand";
 import { getToken } from "@/utils/auth";
 export default {
   name: "Brand",
@@ -197,9 +211,7 @@ export default {
         name: [
           { required: true, message: "品牌名称不能为空", trigger: "blur" }
         ],
-        status: [
-          { required: true, message: "状态不能为空", trigger: "blur" }
-        ]
+        status: [{ required: true, message: "状态不能为空", trigger: "blur" }]
       }
     };
   },
@@ -252,9 +264,9 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.brandId)
-      this.single = selection.length!=1
-      this.multiple = !selection.length
+      this.ids = selection.map(item => item.brandId);
+      this.single = selection.length != 1;
+      this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
     handleAdd() {
@@ -265,7 +277,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const brandId = row.brandId || this.ids
+      const brandId = row.brandId || this.ids;
       getBrand(brandId).then(response => {
         this.form = response.data;
         this.form.logoUrl = this.baseApi + this.form.logo;
@@ -304,29 +316,35 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const brandIds = row.brandId || this.ids;
-      this.$confirm('是否确认删除品牌 编号为"' + brandIds + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+      this.$confirm('是否确认删除品牌 "' + brandIds + '"的数据项?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(function() {
           return delBrand(brandIds);
-        }).then(() => {
+        })
+        .then(() => {
           this.getList();
           this.msgSuccess("删除成功");
-        }).catch(function() {});
+        })
+        .catch(function() {});
     },
     /** 导出按钮操作 */
     handleExport() {
       const queryParams = this.queryParams;
-      this.$confirm('是否确认导出所有品牌 数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
+      this.$confirm("是否确认导出所有品牌 数据项?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(function() {
           return exportBrand(queryParams);
-        }).then(response => {
+        })
+        .then(response => {
           this.download(response.msg);
-        }).catch(function() {});
+        })
+        .catch(function() {});
     },
     /** 图片上传 */
     handleImageSuccess(res, file) {
