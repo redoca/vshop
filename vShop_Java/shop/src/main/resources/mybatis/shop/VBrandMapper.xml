@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.shop.mapper.VBrandMapper">
+    
+    <resultMap type="VBrand" id="VBrandResult">
+        <result property="brandId"    column="brand_id"    />
+        <result property="name"    column="name"    />
+        <result property="logo"    column="logo"    />
+        <result property="description"    column="description"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectVBrandVo">
+        select brand_id, name, logo, description, status from v_brand
+    </sql>
+
+    <select id="selectVBrandList" parameterType="VBrand" resultMap="VBrandResult">
+        <include refid="selectVBrandVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectVBrandById" parameterType="Long" resultMap="VBrandResult">
+        <include refid="selectVBrandVo"/>
+        where brand_id = #{brandId}
+    </select>
+        
+    <insert id="insertVBrand" parameterType="VBrand" useGeneratedKeys="true" keyProperty="brandId">
+        insert into v_brand
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">name,</if>
+            <if test="logo != null  and logo != ''">logo,</if>
+            <if test="description != null  and description != ''">description,</if>
+            <if test="status != null ">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="logo != null  and logo != ''">#{logo},</if>
+            <if test="description != null  and description != ''">#{description},</if>
+            <if test="status != null ">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateVBrand" parameterType="VBrand">
+        update v_brand
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="logo != null  and logo != ''">logo = #{logo},</if>
+            <if test="description != null  and description != ''">description = #{description},</if>
+            <if test="status != null ">status = #{status},</if>
+        </trim>
+        where brand_id = #{brandId}
+    </update>
+
+    <delete id="deleteVBrandById" parameterType="Long">
+        delete from v_brand where brand_id = #{brandId}
+    </delete>
+
+    <delete id="deleteVBrandByIds" parameterType="String">
+        delete from v_brand where brand_id in 
+        <foreach item="brandId" collection="array" open="(" separator="," close=")">
+            #{brandId}
+        </foreach>
+    </delete>
+    
+</mapper>

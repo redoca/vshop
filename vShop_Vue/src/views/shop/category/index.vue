@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container" style="max-width:1140px;">
     <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
       <!-- <el-form-item label="父类目" prop="parentId">
         <el-input
@@ -28,6 +28,7 @@
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
+          maxlength="100" show-word-limit
         />
       </el-form-item>
       <el-form-item label="状态" prop="status">
@@ -100,7 +101,7 @@
       <el-table-column label="排序号" align="center" prop="orderNum" />
       <el-table-column label="图标" align="center">
         <template slot-scope="scope">
-          <el-image style="width: 30px; height: 30px" :src="baseApi + scope.row.icon" fit="contain">
+          <el-image style="width: 50px; height: 50px" :src="baseApi + scope.row.icon" fit="contain">
             <div slot="error" class="image-slot">
               <i class="el-icon-picture-outline"></i>
             </div>
@@ -322,7 +323,6 @@ export default {
 
     // 列表样式 字典翻译
     shopListStyleFormat(row, column) {
-      console.debug(row)
       return this.selectDictLabel(this.shopListStyleOptions, row.listStyle);
     },
     // 取消按钮
